@@ -1,0 +1,73 @@
+﻿@page "/signup"
+
+<PageTitle>Sign Up As New Member</PageTitle>
+
+<title>Account Creation</title>
+
+
+<h3>We're happy with you as our new member, please leave your details here</h3>
+<EditForm Model="person" OnValidSubmit="ValidSubmission">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <label for="firstname" class="form-label">First name: </label>
+    <InputText id="firstname" @bind-Value="person.FirstName" class="form-control" />
+         <br><br>
+
+    <label for="lastname" class="form-label">Last name: </label>
+    <InputText id="lastname" @bind-Value="person.LastName" class="form-control" />
+    <br><br>
+
+    <label for="address" class="form-label">Address: </label>
+    <InputText id="address" @bind-Value="person.Address" class="form-control" />
+    <br><br>
+
+    <label for="housenr" class="form-label">House Number: </label>
+    <InputText id="housenr" @bind-Value="person.HouseNr" class="form-control" />
+    <br><br>
+
+    <label for="city" class="form-label">City: </label>
+    <InputText id="city" @bind-Value="person.City" class="form-control" />
+    <br><br>
+
+    <label for="email" class="form-label">Email: </label>
+    <InputText id="email" @bind-Value="person.Email" class="form-control" />
+    <br><br> 
+
+    @*    convert from sting do int*@
+    <label for="phonenumber" class="form-label">PhoneNumber: </label>
+    <InputText id="phonenumber" @bind-Value="person.City" class="form-control" />
+    <br><br>
+
+@*    convert from sting do datetime*@
+    <label for="dateofbirth" class="form-label">Date of birth: </label>
+    <InputText type="date" id="dateofbirth" @bind-Value="person.City" class="form-control" />
+    <br><br>
+
+    <button class="btn btn-primary" type="submit">Submit</button>
+</EditForm>
+   
+<ul>
+    @foreach (PersonModel person in people)
+    {
+        <li>@person.FirstName</li>
+        <li>@person.LastName</li>
+
+    }
+</ul>
+
+@code {
+    private PersonModel person = new();
+    private List<PersonModel> people = new();
+
+
+
+    private void ValidSubmission()
+    {
+        people.Add(person);
+        person = new();
+
+        //could call a class library, that has data acces code in it that saves it to to the DB
+    }
+    } 
+
