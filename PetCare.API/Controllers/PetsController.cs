@@ -11,6 +11,7 @@ namespace PetCare.API.Controllers
     {
         private readonly IPetRepo _repository;
 
+        //dependency injection
         public PetsController(IPetRepo repository)
         {
             _repository = repository;
