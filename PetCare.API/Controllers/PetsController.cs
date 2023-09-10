@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PetCare.API.Data.Pets;
+using PetCare.API.Dtos;
 using PetCare.API.Models;
 
 namespace PetCare.API.Controllers
@@ -9,29 +11,52 @@ namespace PetCare.API.Controllers
     [ApiController]
     public class PetsController : ControllerBase
     {
-        private readonly IPetRepo _repository;
-
         //dependency injection
-        public PetsController(IPetRepo repository)
+        private readonly IPetRepo _repository;
+        private readonly IMapper _mapper;
+
+        public PetsController(IPetRepo repository, IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
 
 
         [HttpGet]
-        public ActionResult<IEnumerable<PetModel>> GetAllPets()
+        public ActionResult<IEnumerable<PetReadDto>> GetAllPets()
         {
-            var commandItems = _repository.GetAllPets();
+            var listOfPets = _repository.GetAllPets();
 
-            return Ok(commandItems) ;
+            return Ok(_mapper.Map<IEnumerable<PetReadDto>>(listOfPets));
         }
 
-        [HttpGet("{id}")]
-        public ActionResult <PetModel> GetPetById (int id)
+        [HttpGet("{id}", Name = "GetPetById")]
+        public ActionResult<PetReadDto> GetPetById(int id)
         {
-            var commandItems = _repository.GetPetById(id);
-
-            return Ok(commandItems);
+            var petById = _repository.GetPetById(id);
+            if (petById != null)
+            {
+                return Ok(_mapper.Map<PetReadDto>(petById));
+            }
+            else
+            {
+                return NotFound();
+            }
         }
+
+        [HttpPost]
+        public ActionResult<PetReadDto> CreatePet (PetCreateDto petCreateDto)
+        {
+            var petModel = _mapper.Map<PetModel>(petCreateDto);
+            _repository.CreatePet(petModel);
+            _repository.SaveChanges();
+
+            var petReadDto = _mapper.Map<PetReadDto>(petModel);
+
+            return CreatedAtRoute(nameof(GetPetById), new {Id = petReadDto.Id }, petReadDto);
+        }
+
+        //[HttpPost]
+        //public ActionResult<> 
     }
 }

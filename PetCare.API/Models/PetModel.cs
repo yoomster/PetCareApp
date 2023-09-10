@@ -10,7 +10,6 @@ public class PetModel
     [Required]
     public string? Name { get; set; }
 
-    [Required]
     public DateTime DateOfBirth { get; set; } = DateTime.Now;
 
     [Required]
@@ -19,18 +18,14 @@ public class PetModel
     [Required]
     public DateTime PlaceableFrom { get; set; }
 
-    [Required]
     public bool CanJoinCats { get; set; } = false;
 
-    [Required]
     public bool CanJoinDogs { get; set; } = false;
 
-    [Required]
     public bool Indoor { get; set; } = true;
 
     [Required]
     public string? PetSort { get; set; }
 
-    [Required]
     public bool Availible { get; set; } = false;
 }

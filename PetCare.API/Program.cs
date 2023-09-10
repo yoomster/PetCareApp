@@ -20,8 +20,9 @@ builder.Services.AddDbContext<PetCareContext>();
 
 builder.Services.AddControllers();
 
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 //Mock repo has to be swapped out by the real repo where th einterface is mapped to
-builder.Services.AddScoped<IPetRepo, PostgresRepo>();
+builder.Services.AddScoped<IPetRepo, PostgresPetCareRepo>();
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
