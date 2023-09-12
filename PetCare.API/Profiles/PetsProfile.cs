@@ -11,6 +11,9 @@ namespace PetCare.API.Profiles
             //createmap from Source -> Target
             CreateMap<PetModel, PetReadDto>();
             CreateMap<PetCreateDto, PetModel>();
+            CreateMap<PetUpdateDto, PetModel>();
+            CreateMap<PetModel, PetUpdateDto>();
+
         }
     }
 }

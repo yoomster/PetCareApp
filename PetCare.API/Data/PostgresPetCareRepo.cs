@@ -39,7 +39,7 @@ namespace PetCare.API.Data
 
         public void UpdatePet(PetModel pet)
         {
-            //doesn't do anyhting since it's handles by the DbContext
+            //doesn't do anyhting since it's handled by the DbContext
         }
 
 

@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using PetCare.API.Data;
 using PetCare.API.Data.Pets;
+using Newtonsoft.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,9 +17,11 @@ builder.Services.AddCors(options =>
 
 // Add services to the container.
 builder.Services.AddDbContext<PetCareContext>();
- 
 
-builder.Services.AddControllers();
+
+builder.Services.AddControllers().AddNewtonsoftJson(s => { 
+    s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+});
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 //Mock repo has to be swapped out by the real repo where th einterface is mapped to

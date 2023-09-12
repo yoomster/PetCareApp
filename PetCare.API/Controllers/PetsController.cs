@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PetCare.API.Data.Pets;
@@ -45,7 +46,7 @@ namespace PetCare.API.Controllers
         }
 
         [HttpPost]
-        public ActionResult<PetReadDto> CreatePet (PetCreateDto petCreateDto)
+        public ActionResult<PetReadDto> CreatePet(PetCreateDto petCreateDto)
         {
             var petModel = _mapper.Map<PetModel>(petCreateDto);
             _repository.CreatePet(petModel);
@@ -53,10 +54,46 @@ namespace PetCare.API.Controllers
 
             var petReadDto = _mapper.Map<PetReadDto>(petModel);
 
-            return CreatedAtRoute(nameof(GetPetById), new {Id = petReadDto.Id }, petReadDto);
+            return CreatedAtRoute(nameof(GetPetById), new { Id = petReadDto.Id }, petReadDto);
         }
 
-        //[HttpPost]
-        //public ActionResult<> 
+        [HttpPut("{id}")]
+        public ActionResult UpdatePet(int id, PetUpdateDto petUpdateDto)
+        {
+            var petModelFromRepo = _repository.GetPetById(id);
+            if (petModelFromRepo == null)
+            {
+                return NotFound();
+            }
+
+            _mapper.Map(petUpdateDto, petModelFromRepo);
+            _repository.UpdatePet(petModelFromRepo);
+            _repository.SaveChanges();
+
+            return NoContent();
+        }
+
+        [HttpPatch("{id}")]
+        public ActionResult PartialPetUpdate(int id, JsonPatchDocument<PetUpdateDto> patchDoc)
+        {
+            var petModelFromRepo = _repository.GetPetById(id);
+            if (petModelFromRepo == null)
+            {
+                return NotFound();
+            }
+
+            var petToPatch = _mapper.Map<PetUpdateDto>(petModelFromRepo);
+            patchDoc.ApplyTo(petToPatch, ModelState);
+            if (!TryValidateModel(petToPatch))
+            {
+                return ValidationProblem(ModelState);
+            }
+
+            _mapper.Map(petToPatch, petModelFromRepo);
+            _repository.UpdatePet(petModelFromRepo);
+            _repository.SaveChanges();
+
+            return NoContent();
+        }
     }
 }
