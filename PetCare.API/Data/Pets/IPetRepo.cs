@@ -9,6 +9,7 @@ namespace PetCare.API.Data.Pets
         PetModel GetPetById(int id);
         void CreatePet(PetModel pet);
         void UpdatePet(PetModel pet);
+        void DeletePet(PetModel pet);
 
     }
 }

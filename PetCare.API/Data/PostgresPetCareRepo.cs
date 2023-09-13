@@ -21,6 +21,16 @@ namespace PetCare.API.Data
             _context.Pets.Add(pet);
         }
 
+        public void DeletePet(PetModel pet)
+        {
+            if (pet == null)
+            {
+                throw new ArgumentException(nameof(pet));
+            }
+
+            _context.Pets.Remove(pet);
+        }
+
         public IEnumerable<PetModel> GetAllPets()
         {
             return _context.Pets.ToList();

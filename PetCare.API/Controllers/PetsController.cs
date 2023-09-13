@@ -95,5 +95,21 @@ namespace PetCare.API.Controllers
 
             return NoContent();
         }
+
+        [HttpDelete("{id}")]
+        public ActionResult DeletePet(int id)
+        {
+            var petModelFromRepo = _repository.GetPetById(id);
+            if (petModelFromRepo == null)
+            {
+                return NotFound();
+            }
+
+            _repository.DeletePet(petModelFromRepo);
+            _repository.SaveChanges();
+
+            return NoContent();
+
+        }
     }
 }
